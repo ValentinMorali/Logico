@@ -146,3 +146,29 @@ paisesDeContinenteQueNoTiene(P,J,C):-
 			continente(C),
 			estaEn(C,P),
 			not(ocupa(P,J,_)).
+
+% elQueTieneMasEjercitos/2 que relaciona un jugador y un país si se cumple que es en ese país que hay más ejércitos que en los
+%países del resto del mundo y a su vez ese país es ocupado por ese jugador.
+%En la base de conocimiento provista, el que tiene más ejércitos es el amarillo, en canadá
+elQueTieneMasEjercitos(J,P):- ocupa(P,J,E), forall(ocupa(_,_,Ej), E >= Ej).
+
+% juntan/3 que relaciona dos países y una cantidad, cuando la cantidad representa la suma de los ejércitos en ambos países.
+juntan(P1,P2,C):- ocupa(P1,_,E1), ocupa(P2,_,E2), C is E1+E2.
+
+%10 seguroGanaContra/2 que relaciona dos países limítrofes de diferentes jugadores y es cierto cuando el primero tiene más del
+%doble de ejércitos que el segundo.
+seguroGanaContra(P1,P2):- sonLimitrofes(P1,P2),
+			ocupa(P1,J1,E1),
+			ocupa(P2,J2,E2),
+			 J1 \= J2,
+			E1 > (2*E2).
+			
+%cuantoAgregaParaGanarSeguro/3 que relaciona dos países limítrofes de diferentes jugadores y una cantidad, y es cierto cuando
+%esa cantidad es la cantidad de ejércitos que tengo que ponerle al primer país para que le gane seguro al segundo.
+%¡No repetir lógica!		
+
+cuantoAgregaParaGanarSeguro(P1, P2, Cant):-
+    ocupa(P1, _ , Ejercito1),
+    juntan(P2, P2, Total),
+    Cantidad = Total * 2 - Ejercito1.
+						 
